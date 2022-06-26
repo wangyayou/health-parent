@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/mvc
+            http://www.springframework.org/schema/mvc/spring-mvc.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx.xsd
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop.xsd
+            http://www.springframework.org/schema/security
+            http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!-- 配置框架不需要拦截的资源   pattern  表示访问的资源路径或名称   security none  表示不要拦截  -->
+    <security:http pattern="/login.html" security="none"/>
+
+    <!--谷歌浏览器,如果访问页面失败,会自动请求一次/favicon.ico,保存为上次请求-->
+    <security:http pattern="/favicon.ico" security="none"/>
+
+    <!-- 2、配置授权信息 配置拦截的规则 auto-config="使用自带的页面"
+  use-expressions="是否使用spel表达式"，如果使用表达式：hasRole('ROLE_USER') -->
+    <security:http auto-config="true" use-expressions="false">
+        <!-- 配置拦截的请求地址，任何请求地址都必须有ROLE_USER的权限 -->
+<!--        <security:intercept-url pattern="/**" access="ROLE_USER"/>-->
+        <security:intercept-url pattern="/hello.html" access="ROLE_HELLO"></security:intercept-url>
+        <security:intercept-url pattern="/index.html" access="ROLE_USER"></security:intercept-url>
+        <!-- 3. 自定义登录页面-->
+        <!--
+                  login-page:自定义登录页面的路径
+                  login-processing-url:登录请求拦截的URL  form表单提交的URL默认值是login
+                  default-target-url: 权限认证成功的页面
+                  authentication-failure-url:权限认证失败的页面
+                  authentication-failure-forward-url   不管用户认证通过之前访问的资源是什么，只要认证通过 都自动跳转到index.html页面
+                   default-target-url="/index.html" 权限认证成功成功后默认的跳转页面
+                   always-use-default-target 默认值为false 如果为true每次认证成功都会使用默认的跳转页面
+              -->
+       <!-- <security:form-login
+                login-page="/login.html"
+                username-parameter="username"
+                password-parameter="password"
+                login-processing-url="/index.html"
+                default-target-url="/index.html"
+                always-use-default-target="true"
+                authentication-failure-forward-url="/fail.html"
+        ></security:form-login>-->
+        <!--关闭自定义登录表单页面的token校验-->
+        <security:csrf disabled="true"></security:csrf>
+
+    </security:http>
+    <!--1、配置认证信息   authentication-manager   -->
+    <security:authentication-manager>
+        <!--指定用户和密码的提供者 UserDetails接口的实现类  bean  id  userService-->
+        <!--<security:authentication-provider user-service-ref="userService"/>-->
+        <!--内存中的测试配置-->
+        <!--* 在内存中配置链式的账号密码-->
+        <!--* {noop}不使用加密-->
+        <!--* authorities:角色,认证的角色必须是一个用户-->
+        <security:authentication-provider>
+            <security:user-service>
+                <security:user name="admin" password="{noop}admin" authorities="ROLE_USER"/>
+                <security:user name="1" password="{noop}1" authorities="ROLE_HELLO"/>
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+</beans>
+

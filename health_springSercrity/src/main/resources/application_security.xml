@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+<!--     security：http 一般都是用来配置不需要权限的资源
+          pattern用来配置资源的路径或者名称
+          security 安全等级如果为none就是没有权限-->
+    <security:http pattern="/index.html" security="none"></security:http>
+<!--    谷歌浏览器如果访问打开网页会缺少一个favio.ivo图片 这里我们进行这么配置就可以解决这个问题-->
+    <security:http pattern="/favicon.ico" security="none"></security:http>
+<!--    配置授权信息 配置拦截的规则auto-config="使用自带的页面
+        use-expressions=是否使用spel表达式如果使用表达式hosRole('ROLE_USER')-->
+    <security:http auto-config="true" use-expressions="false">
+<!--    <security:intercept-url pattern="/**" access="ROLE_USER"></security:intercept-url>-->
+
+    </security:http>
+    <security:authentication-manager>
+        <security:authentication-provider>
+            <security:user-service >
+                <security:user name="11 " authorities="ROLE_USER" password="{noop}11"></security:user>
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>
+</beans>

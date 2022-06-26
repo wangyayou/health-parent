@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/mvc
+            http://www.springframework.org/schema/mvc/spring-mvc.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx.xsd
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+      <context:component-scan base-package="cn.itheima.quartz"/>
+
+      <!--<bean id="qiniuyunCleanImageObject" class="cn.itheima.quartz.qiniuyun.cleanimg.QiniuyunCleanImageObject"></bean>-->
+        <!--调度器 -->
+      <bean id="methodInvokingJobDetailFactoryBean" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+            <property name="targetObject" ref="qiniuyunCleanImageObject"/>
+            <property name="targetMethod" value="run"/>
+      </bean>
+
+        <!--触发器- 配置触发时间 -->
+      <bean id="trigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+            <property name="jobDetail" ref="methodInvokingJobDetailFactoryBean"></property>
+            <property name="cronExpression" value="*/40 * * * * ?"></property>
+      </bean>
+
+     <!--统一调度执行器-->
+      <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+            <property name="triggers">
+                  <list>
+                        <ref bean="trigger"/>
+                  </list>
+            </property>
+      </bean>
+
+
+
+</beans>

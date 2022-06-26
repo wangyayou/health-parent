@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.itheima.mapper.setMealMapper">
+    <select id="findAllMeals" resultType="Setmeal">
+        select * from t_setmeal where is_delete = 0
+        <if test="queryString != null and queryString.trim() != ''">
+            and name like concat('%',#{queryString},'%')
+        </if>
+    </select>
+
+
+
+  <!--  <select id="findCheckGroupByGids" resultType="checkgroup">
+        select * from t_checkgroup
+        <if test="groupIdList!=null">
+        where id in
+        <foreach collection="groupIdList" open="(" separator="," item="groupId" close=")">
+            #{groupId}
+        </foreach>
+        </if>
+    </select>-->
+
+   <!-- <select id="findCheckItemsByItemIds" resultType="checkitem">
+        select * from t_checkitem
+        where
+        <if test="itemIdList!=null">
+         id in
+
+        <foreach collection="itemIdList" open="("  separator="," item="itemId" close=")">
+            #{itemId}
+        </foreach>
+        </if>
+
+    </select>-->
+
+    <!--<select id="findSetMealDetail" resultMap="oneToManyToMany">
+        SELECT
+        s.*
+    FROM
+        t_setmeal s
+    INNER JOIN t_setmeal_checkgroup sc ON s.id = sc.setmeal_id
+    inner join t_checkgroup c on c.id = sc.checkgroup_id
+    inner join t_checkgroup_checkitem cc on cc.checkgroup_id = c.id
+    inner join t_checkitem ci on ci.id = cc.checkitem_id
+    WHERE
+        s.id = #{id}
+    </select>-->
+
+    <!--<resultMap id="oneToManyToMany" type="Setmeal" autoMapping="true">
+        <id property="id" column="id"></id>
+        <collection property="checkGroups" javaType="list" ofType="CheckGroup" autoMapping="true">
+
+            <id property="id" column="id"></id>
+
+            <collection property="checkItems"  javaType="list" ofType="CheckItem" autoMapping="true">
+
+                <id property="id" column="id"></id>
+
+            </collection>
+        </collection>
+    </resultMap>-->
+</mapper>

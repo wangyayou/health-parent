@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.itheima.mapper.checkItemMapper">
+
+    <insert id="add" >
+        insert into t_checkitem values (null,#{code},#{name},#{sex},#{age},
+        #{price},#{type},#{attention},#{remark},#{is_delete})
+    </insert>
+    <select id="findPage" resultType="CheckItem">
+        select * from t_checkitem where is_delete = 0
+        <if test="queryString !=null and queryString.trim() !=''">
+            and name like concat('%',#{queryString},'%')
+        </if>
+    </select>
+
+</mapper>

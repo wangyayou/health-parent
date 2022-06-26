@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.mapper.UserMapper">
+
+    <select id="findRolesByUsername" resultType="role">
+        select tr.*
+        from t_user tu,t_user_role tur,t_role tr
+        where tu.username = #{username}
+        and tu.id = tur.user_id
+        and tur.role_id = tr.id
+    </select>
+    <select id="findUserParentMenuByRoleId" resultType="Menu">
+        select *
+        from (select tm.*
+              from t_role_menu trm,t_menu tm
+              where trm.role_id = #{id}
+                and trm.menu_id = tm.id) user_menu
+        where user_menu.icon!=''
+    </select>
+
+    <select id="findMenuChildrenByPath" resultType="Menu">
+        select *
+        from t_menu tm
+        where tm.parentMenuId = #{id}
+    </select>
+</mapper>
